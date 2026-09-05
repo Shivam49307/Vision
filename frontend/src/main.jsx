@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import App from './App'
 import Login from './pages/Login'
-import Register from './pages/Register'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -14,7 +13,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route
             path="/"
             element={

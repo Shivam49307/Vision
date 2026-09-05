@@ -16,7 +16,14 @@ from PIL import Image
 
 import logger  # noqa: F401
 from loguru import logger as log
-from auth import create_access_token, get_current_user, hash_password, verify_password
+from auth import (
+    create_access_token,
+    get_current_user,
+    hash_password,
+    is_single_user_mode,
+    verify_password,
+    verify_single_user,
+)
 from database import Base, engine, get_db
 from model import TASK_PROMPTS, vision_model
 import models
@@ -100,6 +107,9 @@ class AgentMessage(BaseModel):
 
 @app.post("/api/auth/register", response_model=UserOut)
 def register(body: RegisterBody, db: Session = Depends(get_db)):
+    if is_single_user_mode():
+        raise HTTPException(status_code=403, detail="Registration is disabled")
+
     if db.query(models.User).filter(
         (models.User.username == body.username) | (models.User.email == body.email)
     ).first():
@@ -124,6 +134,15 @@ def register(body: RegisterBody, db: Session = Depends(get_db)):
 
 @app.post("/api/auth/login")
 def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    if is_single_user_mode():
+        if not verify_single_user(form.username, form.password):
+            log.warning(f"Failed private login | username={form.username}")
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+
+        token = create_access_token(1)
+        log.info(f"Private user logged in | username={form.username}")
+        return {"access_token": token, "token_type": "bearer"}
+
     user = db.query(models.User).filter(models.User.username == form.username).first()
     if not user or not verify_password(form.password, user.hashed_password):
         log.warning(f"Failed login | username={form.username}")
