@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	body {
+		@apply text-stone-900 antialiased;
+		font-family: 'DM Sans', sans-serif;
+		background: #fffaf5;
+	}
+
+	h1, h2, h3 {
+		font-family: 'Space Grotesk', sans-serif;
+	}
+}
+
+@layer utilities {
+	.app-shell {
+		background-color: #fffaf5;
+		background-image: radial-gradient(#f3c9a8 0.7px, transparent 0.7px);
+		background-size: 18px 18px;
+	}
+
+	.animate-enter {
+		animation: enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+
+	.animate-rise {
+		animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+	}
+
+	.card-hover {
+		transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+	}
+
+	.card-hover:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 16px 38px rgba(120, 53, 15, 0.1);
+		border-color: #fed7aa;
+	}
+}
+
+@keyframes enter {
+	from { opacity: 0; transform: translateY(12px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rise {
+	from { opacity: 0; transform: translateY(8px) scale(0.99); }
+	to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}
