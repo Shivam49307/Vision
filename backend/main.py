@@ -50,12 +50,11 @@ app = FastAPI(title="Vision AI API", version="3.0.0", lifespan=lifespan)
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
-    # Add your Vercel URL here after deploying, e.g.:
-    # "https://your-app.vercel.app",
+    "https://frontend-rust-ten-12.vercel.app",
 ]
 _extra = os.getenv("ALLOWED_ORIGINS", "")
 if _extra:
-    ALLOWED_ORIGINS += [o.strip() for o in _extra.split(",") if o.strip()]
+    ALLOWED_ORIGINS += [o.strip().rstrip("/") for o in _extra.split(",") if o.strip()]
 
 app.add_middleware(
     CORSMiddleware,
