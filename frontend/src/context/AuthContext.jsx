@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 const AuthContext = createContext(null)
+const AUTH_BASE = `${import.meta.env.VITE_API_URL || ''}/api/auth`
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('visionai_token'))
@@ -10,7 +11,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!token) { setLoading(false); return }
 
-    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${AUTH_BASE}/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((u) => { setUser(u); setLoading(false) })
       .catch(() => { localStorage.removeItem('visionai_token'); setToken(null); setLoading(false) })
