@@ -160,6 +160,11 @@ def me(current_user: models.User = Depends(get_current_user)):
 
 # ── Vision routes ─────────────────────────────────────────────────────────────
 
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "Vision AI API"}
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "model": "gemini-3.6-flash"}
